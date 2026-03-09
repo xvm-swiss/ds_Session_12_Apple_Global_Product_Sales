@@ -144,7 +144,7 @@ kpi_4.metric("Total All Years", f"{total_all:,}")
 
 
 
-# Payment method by categories
+# Payment method by categories..
 fig_1= px.histogram(filtered_df, x= "payment_method" , color='payment_method',facet_col= 'category'  ,
             y='unit_price_usd', title= "Payment method by categories"
         )
