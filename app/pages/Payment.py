@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-df = pd.read_csv('data\cleaned_data\cleaned_data.csv')
+df = pd.read_csv('data/cleaned_data/cleaned_data.csv')
 
 
 # 1. CSS: Erzwingt 0px oben und 50px unten
