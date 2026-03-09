@@ -8,12 +8,18 @@ from streamlit_option_menu import option_menu
 # Title page
 st.set_page_config(
     page_title= 'Dashboard',
-    page_icon= ':bar_chart:',
+    page_icon= ':credit_card:',
     layout="wide"
 )
 
 df = pd.read_csv('data/cleaned_data/cleaned_data.csv')
 
+
+# 1. Anker direkt beim Navigationsmenü setzen ( Scroll up)
+st.markdown("<div id='nav-menu'></div>", unsafe_allow_html=True)
+
+# 1. Anker direkt beim Navigationsmenü setzen ( Scroll up)
+st.markdown("<div id='nav-menu'></div>", unsafe_allow_html=True)
 
 # 1. CSS: Erzwingt 0px oben und 50px unten
 st.markdown("""
@@ -37,7 +43,7 @@ st.markdown("""
 # "orientation='horizontal'" macht es zu einer Leiste oben
 selected = option_menu(
     None, ["Category", "Continents", "Age_Group", "Payment"], 
-    icons=['house', 'globe', 'credit-card', 'people'], 
+    icons=['house', 'globe', 'people', 'credit-card'], 
     default_index=3,  # 0 ist "Home"
     orientation="horizontal",
     styles={
@@ -117,9 +123,62 @@ with col1:
     st.image("app/pages/new_apple_logo.png", width=70)
 
 with col2 :
-    st.write("# Apple Global Product Sales")
-    st.write("Payment method by categories")
+    st.write("## Payment method by categories")
+    st.write("Apple Global Product Sales")
 
+
+
+# Payment method by categories..
+fig_1= px.histogram(filtered_df, x= "payment_method" , color='payment_method',facet_col= 'category'  ,
+            y='unit_price_usd', title= "Payment method by categories"
+        )
+
+st.plotly_chart(fig_1,  use_container_width=True)
+
+
+# Die Payment Method 1, die du anzeigen möchtest
+payment_list = ['Cash', 'Debit Card', 'Credit Card', 'Net Banking']
+
+# 6 Spalten erstellen
+cols = st.columns(4)
+
+# In einer Schleife berechnen und anzeigen
+for col, cat_name in zip(cols, payment_list):
+    # Berechnung nur auf dem gefilterten DF
+    value = int(filtered_df[filtered_df["payment_method"] == cat_name]["units_sold"].sum())
+    
+    # Anzeige in der jeweiligen Spalte
+    col.write(f'<h3> {cat_name}: <br>{value:,}</h3>', unsafe_allow_html=True)
+
+
+#------------------------- 2 ------------------------------
+
+
+# Die Payment Method 2, die du anzeigen möchtest
+payment_list_2 = ['Gift Card', 'Apple Pay', 'EMI / Installment']
+
+# 6 Spalten erstellen
+cols_2 = st.columns(4)
+
+# In einer Schleife berechnen und anzeigen
+for col_2, cat_name in zip(cols_2, payment_list_2):
+    # Berechnung nur auf dem gefilterten DF
+    value = int(filtered_df[filtered_df["payment_method"] == cat_name]["units_sold"].sum())
+    
+    # Anzeige in der jeweiligen Spalte
+    col_2.write(f'<h3> {cat_name}: <br>{value:,}</h3>', unsafe_allow_html=True)
+
+
+
+
+
+
+# Payment method by categories 2
+fig_1= px.histogram(filtered_df, x= "payment_method" , color='customer_age_group',facet_col= 'customer_age_group'  ,
+            y='unit_price_usd', title= "Payment method by categories"
+        )
+
+st.plotly_chart(fig_1,  use_container_width=True)
 
 # KPI's
 
@@ -168,40 +227,19 @@ kpi_3.write( f'<h2> Total 2022: <br> {total_2024:,}</h2>',
 kpi_4.write( f'<h2> All Years:<br> {total_all:,}</h2>',
             unsafe_allow_html= True)
 
-
-
-
-
-# Payment method by categories..
-fig_1= px.histogram(filtered_df, x= "payment_method" , color='payment_method',facet_col= 'category'  ,
-            y='unit_price_usd', title= "Payment method by categories"
-        )
-
-st.plotly_chart(fig_1,  use_container_width=True)
-
-
-# Die Payment Method, die du anzeigen möchtest
-payment_list = ['Cash', 'Debit Card', 'Credit Card', 'Net Banking', 'Gift Card', 'Apple Pay', 'EMI / Installment']
-
-# 6 Spalten erstellen
-cols = st.columns(7)
-
-# In einer Schleife berechnen und anzeigen
-for col, cat_name in zip(cols, payment_list):
-    # Berechnung nur auf dem gefilterten DF
-    value = int(filtered_df[filtered_df["payment_method"] == cat_name]["units_sold"].sum())
-    
-    # Anzeige in der jeweiligen Spalte
-    col.write(f'<h6> {cat_name}: <br>{value:,}</h6>', unsafe_allow_html=True)
-
-
-# Payment method by categories 2
-fig_1= px.histogram(filtered_df, x= "payment_method" , color='customer_age_group',facet_col= 'customer_age_group'  ,
-            y='unit_price_usd', title= "Payment method by categories"
-        )
-
-st.plotly_chart(fig_1,  use_container_width=True)
-
+st.markdown("""
+    <a href='#nav-menu' style='text-decoration:none;'>
+        <button style='
+            background-color: #39FF14; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px;
+            cursor: pointer;'>
+            Scroll up ↑
+        </button>
+    </a>
+    """, unsafe_allow_html=True)
 
 
 # Graphic most sold products

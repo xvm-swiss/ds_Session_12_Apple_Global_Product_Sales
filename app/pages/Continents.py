@@ -8,11 +8,15 @@ from streamlit_option_menu import option_menu
 # Title page
 st.set_page_config(
     page_title= 'Dashboard',
-    page_icon= ':bar_chart:',
+    page_icon= ':earth_africa:',
     layout="wide"
 )
 
 df = pd.read_csv('data/cleaned_data/cleaned_data.csv')
+
+
+# 1. Anker direkt beim Navigationsmenü setzen ( Scroll up)
+st.markdown("<div id='nav-menu'></div>", unsafe_allow_html=True)
 
 
 # 1. CSS: Erzwingt 0px oben und 50px unten
@@ -37,7 +41,7 @@ st.markdown("""
 # "orientation='horizontal'" macht es zu einer Leiste oben
 selected = option_menu(
     None, ["Category", "Continents", "Age_Group", "Payment"], 
-    icons=['house', 'globe', 'credit-card', 'people'], 
+    icons=['house', 'globe','people', 'credit-card'], 
     default_index=1,  # 0 ist "Home"
     orientation="horizontal",
     styles={
@@ -116,8 +120,74 @@ with col1:
     st.image("app/pages/new_apple_logo.png", width=70)
 
 with col2 :
-    st.write("# Apple Global Product Sales")
-    st.write("Continent sold by amount")
+    st.write("## Continent sold by amount")
+    st.write("Apple Global Product Sales")
+
+
+# 1. Continent Sold by amount" 
+
+fig = px.histogram(filtered_df, x= "region" ,color='region',
+                    y='unit_price_usd' ,  title="Continent sold by amount" 
+        )
+
+st.plotly_chart(fig,  use_container_width=True)
+
+
+
+# KPi's 2
+South_America = round(filtered_df[ filtered_df["region"]== 'South America']["unit_price_usd"].sum())
+Oceania = round(filtered_df[ filtered_df["region"]== 'Oceania']["unit_price_usd"].sum())
+Europe = round(filtered_df[ filtered_df["region"]== 'Europe']["unit_price_usd"].sum())
+Asia = round(filtered_df[ filtered_df["region"]== 'Asia']["unit_price_usd"].sum())
+North_America = round(filtered_df[ filtered_df["region"]== 'North America']["unit_price_usd"].sum())
+Africa = round(filtered_df[ filtered_df["region"]== 'Africa']["unit_price_usd"].sum())
+Europe_Asia = round(filtered_df[ filtered_df["region"]== 'Europe/Asia']["unit_price_usd"].sum())
+Middle_East = round(filtered_df[ filtered_df["region"]== 'Middle East']["unit_price_usd"].sum())
+
+
+# Continents: 1
+cont_1, cont_2, cont_3, cont_4 = st.columns(4)
+
+
+cont_1.write( f'<h3> S. America: <br>{South_America}</h3>',
+            unsafe_allow_html= True,)
+cont_2.write( f'<h3>Oceania: <br>{Oceania}</h3>',
+            unsafe_allow_html= True,)
+
+cont_3.write( f'<h3>Europe: <br>{Europe}</h3>',
+            unsafe_allow_html= True,)
+
+cont_4.write( f'<h3>Asia: <br>{Asia}</h3>',
+            unsafe_allow_html= True,)
+
+# Continents: 2
+cont_5, cont_6, cont_7, cont_8 = st.columns(4)
+
+cont_5.write( f'<h3>N. America: <br>{North_America}</h3>',
+            unsafe_allow_html= True,)
+cont_6.write( f'<h3>Africa: <br>{Africa}</h3>',
+            unsafe_allow_html= True,)
+cont_7.write( f'<h3>Middle East: <br>{Middle_East}</h3>',
+            unsafe_allow_html= True,)
+
+cont_8.write( f'<h3>Middle East: <br>{Europe_Asia}</h3>',
+            unsafe_allow_html= True,)
+
+
+# Graphics 2
+fig_1 = px.histogram(filtered_df, x= "country" ,color='country',
+                      y='unit_price_usd' , title= "Solid Product by Countries")
+
+st.plotly_chart(fig_1, use_container_width= True)
+
+
+
+
+# Graphics 3
+fig_1 = px.histogram(filtered_df, x= "country" ,color='customer_segment', facet_col= 'customer_segment', 
+                      y='unit_price_usd' , title= "Solid Product by Countries")
+
+st.plotly_chart(fig_1, use_container_width= True)
 
 # KPI's
 
@@ -165,56 +235,16 @@ kpi_3.write( f'<h2> Total 2022: <br> {total_2024:,}</h2>',
 kpi_4.write( f'<h2> All Years:<br> {total_all:,}</h2>',
             unsafe_allow_html= True)
 
-
-
-# 1. Continent Sold by amount" 
-
-fig = px.histogram(filtered_df, x= "region" ,color='region',
-                    y='unit_price_usd' ,  title="Continent sold by amount" 
-        )
-
-st.plotly_chart(fig,  use_container_width=True)
-
-# KPi's 2
-South_America = round(filtered_df[ filtered_df["region"]== 'South America']["unit_price_usd"].sum())
-Oceania = round(filtered_df[ filtered_df["region"]== 'Oceania']["unit_price_usd"].sum())
-Europe = round(filtered_df[ filtered_df["region"]== 'Europe']["unit_price_usd"].sum())
-Asia = round(filtered_df[ filtered_df["region"]== 'Asia']["unit_price_usd"].sum())
-North_America = round(filtered_df[ filtered_df["region"]== 'North America']["unit_price_usd"].sum())
-Africa = round(filtered_df[ filtered_df["region"]== 'Africa']["unit_price_usd"].sum())
-Europe_Asia = round(filtered_df[ filtered_df["region"]== 'Europe/Asia']["unit_price_usd"].sum())
-Middle_East = round(filtered_df[ filtered_df["region"]== 'Middle East']["unit_price_usd"].sum())
-
-
-# Continents:
-cont_1, cont_2, cont_3, cont_4, cont_5, cont_6, cont_7 = st.columns(7)
-
-
-cont_1.write( f'<h6> S. America: <br>{South_America}</h6>',
-            unsafe_allow_html= True,)
-cont_2.write( f'<h6>Oceania: <br>{Oceania}</h6>',
-            unsafe_allow_html= True,)
-
-cont_3.write( f'<h6>Europe: <br>{Europe}</h6>',
-            unsafe_allow_html= True,)
-
-cont_4.write( f'<h6>Asia: <br>{Asia}</h6>',
-            unsafe_allow_html= True,)
-cont_5.write( f'<h6>N. America: <br>{North_America}</h6>',
-            unsafe_allow_html= True,)
-cont_6.write( f'<h6>Africa: <br>{Africa}</h6>',
-            unsafe_allow_html= True,)
-cont_7.write( f'<h6>Middle East: <br>{Middle_East}</h6>',
-            unsafe_allow_html= True,)
-
-# Graphics 2
-fig_1 = px.histogram(filtered_df, x= "country" ,color='country',
-                      y='unit_price_usd' , title= "Solid Product by Countries")
-
-st.plotly_chart(fig_1, use_container_width= True)
-
-# Graphics 3
-fig_1 = px.histogram(filtered_df, x= "country" ,color='customer_segment', facet_col= 'customer_segment', 
-                      y='unit_price_usd' , title= "Solid Product by Countries")
-
-st.plotly_chart(fig_1, use_container_width= True)
+st.markdown("""
+    <a href='#nav-menu' style='text-decoration:none;'>
+        <button style='
+            background-color: #39FF14; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px;
+            cursor: pointer;'>
+            Scroll up ↑
+        </button>
+    </a>
+    """, unsafe_allow_html=True)

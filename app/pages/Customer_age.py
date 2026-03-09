@@ -8,12 +8,16 @@ from streamlit_option_menu import option_menu
 # Title page
 st.set_page_config(
     page_title= 'Dashboard',
-    page_icon= ':bar_chart:',
+    page_icon= ':family_man_woman_girl_boy:',
     layout="wide"
 )
 
 df = pd.read_csv('data/cleaned_data/cleaned_data.csv')
 
+
+
+# 1. Anker direkt beim Navigationsmenü setzen ( Scroll up)
+st.markdown("<div id='nav-menu'></div>", unsafe_allow_html=True)
 
 # 1. CSS: Erzwingt 0px oben und 50px unten
 st.markdown("""
@@ -37,7 +41,7 @@ st.markdown("""
 # "orientation='horizontal'" macht es zu einer Leiste oben
 selected = option_menu(
     None, ["Category", "Continents", "Age_Group", "Payment"], 
-    icons=['house', 'globe', 'credit-card', 'people'], 
+    icons=['house', 'globe','people', 'credit-card'], 
     default_index=2,  # 0 ist "Home"
     orientation="horizontal",
     styles={
@@ -94,10 +98,40 @@ with col1:
     st.image("app/pages/new_apple_logo.png", width=70)
 
 with col2 :
-    st.write("# Apple: Customer age")
-    st.write("Year: 2022, 2023 and 2024")
+    st.write("## Customer age group")
+    st.write("Apple Global Product Sales")
 
 
+
+# Customer age group
+fig_1= px.histogram(filtered_df, x= "customer_age_group" , color='customer_age_group',facet_col= 'category'  ,
+            y='unit_price_usd', title= "Customer age group"
+        )
+
+st.plotly_chart(fig_1,  use_container_width=True)
+
+
+# Die Payment Method, die du anzeigen möchtest
+payment_list = ['18–24', '25–34', '35–44', '45–54', '55+']
+
+# 6 Spalten erstellen
+cols = st.columns(5)
+
+# In einer Schleife berechnen und anzeigen
+for col, cat_name in zip(cols, payment_list):
+    # Berechnung nur auf dem gefilterten DF
+    value = int(filtered_df[filtered_df["customer_age_group"] == cat_name]["unit_price_usd"].sum())
+    
+    # Anzeige in der jeweiligen Spalte
+    col.write(f'<h4> {cat_name}: <br>{value:,}</h4>', unsafe_allow_html=True)
+
+
+# Customer age group
+fig_2= px.histogram(filtered_df, x= "customer_age_group" , color='payment_method',facet_col= 'payment_method'  ,
+             title= "Customer age group"
+        )
+
+st.plotly_chart(fig_2,  use_container_width=True)
 
 # KPI's
 
@@ -147,39 +181,19 @@ kpi_4.write( f'<h2> All Years:<br> {total_all:,}</h2>',
             unsafe_allow_html= True)
 
 
-
-
-# Customer age group
-fig_1= px.histogram(filtered_df, x= "customer_age_group" , color='customer_age_group',facet_col= 'category'  ,
-            y='unit_price_usd', title= "Customer age group"
-        )
-
-st.plotly_chart(fig_1,  use_container_width=True)
-
-
-# Die Payment Method, die du anzeigen möchtest
-payment_list = ['18–24', '25–34', '35–44', '45–54', '55+']
-
-# 6 Spalten erstellen
-cols = st.columns(5)
-
-# In einer Schleife berechnen und anzeigen
-for col, cat_name in zip(cols, payment_list):
-    # Berechnung nur auf dem gefilterten DF
-    value = int(filtered_df[filtered_df["customer_age_group"] == cat_name]["unit_price_usd"].sum())
-    
-    # Anzeige in der jeweiligen Spalte
-    col.write(f'<h4> {cat_name}: <br>{value:,}</h4>', unsafe_allow_html=True)
-
-
-# Customer age group
-fig_2= px.histogram(filtered_df, x= "customer_age_group" , color='payment_method',facet_col= 'payment_method'  ,
-             title= "Customer age group"
-        )
-
-st.plotly_chart(fig_2,  use_container_width=True)
-
-
+st.markdown("""
+    <a href='#nav-menu' style='text-decoration:none;'>
+        <button style='
+            background-color: #39FF14; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px;
+            cursor: pointer;'>
+            Scroll up ↑
+        </button>
+    </a>
+    """, unsafe_allow_html=True)
 
 # Graphic most sold products
 
