@@ -37,7 +37,7 @@ st.markdown("""
 # Navigator Menü
 # "orientation='horizontal'" macht es zu einer Leiste oben
 selected = option_menu(
-    None, ["Home", "Continents", "Customer age", "Payment"], 
+    None, ["Category", "Continents", "Age_Group", "Payment"], 
     icons=['house', 'globe', 'credit-card', 'people'], 
     default_index=0,  # 0 ist "Home"
     orientation="horizontal",
@@ -52,7 +52,7 @@ if selected == "Continents":
     st.switch_page("pages/Continents.py")
 # ... (Home muss hier nicht geswitcht werden)
 
-elif selected == "Customer age":
+elif selected == "Age_Group":
     st.switch_page("pages/Customer_age.py")
 
 elif selected == "Payment":
@@ -140,18 +140,53 @@ total_2023 = len(filtered_df[filtered_df['year'] == 2023])
 total_2024 = len(filtered_df[filtered_df['year'] == 2024])
 total_all = len(filtered_df)
 
+st.markdown("""
+    <style>
+    /* Desktop: 4 Spalten nebeneinander (Standard) */
+    /* Mobile: Erzwinge 2 Spalten pro Reihe bei Bildschirmen unter 768px */
+    @media (max-width: 768px) {
+        [data-testid="column"] {
+            width: 48% !important; /* Fast die Hälfte */
+            flex: 1 1 45% !important;
+            min-width: 45% !important;
+            margin-bottom: 10px;
+        }
+        
+        /* Verhindert das Übereinanderstapeln */
+        [data-testid="stHorizontalBlock"] {
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+        }
+    }
+    
+    /* Optional: Text im KPI zentrieren */
+    h3 { text-align: center; font-size: 1.2rem !important; }
+    </style>
+    """, unsafe_allow_html=True)
 
 # Anzeige in den Spalten
 kpi_1, kpi_2, kpi_3, kpi_4 = st.columns(4)
 
-kpi_1.metric("Total 2022", f"{total_2022:,}")
-kpi_2.metric("Total 2023", f"{total_2023:,}")
-kpi_3.metric("Total 2024", f"{total_2024:,}")
-kpi_4.metric("Total All Years", f"{total_all:,}")
+
+kpi_1.write( f'<h2> Total 2022:<br> {total_2022:,}</h2>',
+            unsafe_allow_html= True,)
+kpi_2.write( f'<h2> Total 2023: <br> {total_2023:,}</h2>',
+            unsafe_allow_html= True)
+
+kpi_3.write( f'<h2> Total 2022: <br> {total_2024:,}</h2>',
+            unsafe_allow_html= True)
+kpi_4.write( f'<h2> All Years:<br> {total_all:,}</h2>',
+            unsafe_allow_html= True)
+
 
 #Ich habe kpi_1.write durch st.metric ersetzt. 
 # Das sieht in Streamlit-Dashboards professioneller aus 
 # und benötigt kein unsafe_allow_html.
+# kpi_1.metric("Total 2022", f"{total_2022:,}")
+# kpi_2.metric("Total 2023", f"{total_2023:,}")
+# kpi_3.metric("Total 2024", f"{total_2024:,}")
+# kpi_4.metric("Total All Years", f"{total_all:,}")
+
 
 
 
