@@ -15,9 +15,6 @@ st.set_page_config(
 df = pd.read_csv('data\cleaned_data\cleaned_data.csv')
 
 
-import streamlit as st
-from streamlit_option_menu import option_menu
-
 # 1. CSS: Erzwingt 0px oben und 50px unten
 st.markdown("""
     <style>
