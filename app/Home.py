@@ -4,7 +4,7 @@ import plotly.express as px
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from streamlit_option_menu import option_menu
-#pip install streamlit-scroll-to-top
+
 
 
 # Title page
