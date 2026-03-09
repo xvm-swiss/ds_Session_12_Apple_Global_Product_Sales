@@ -9,4 +9,5 @@ nbformat
 wordcloud
 joblib
 scikit-learn
+streamlit-option-menu
 
